@@ -110,6 +110,7 @@ function _fmt(str: string, formats: any[]) {
   @param {Array} formats Optional array of parameters to interpolate into string.
   @return {String} formatted string
   @public
+  @deprecated
 */
 export function loc(str: string, formats: any[]): string {
   deprecate(
@@ -319,6 +320,7 @@ if (ENV.EXTEND_PROTOTYPES.String) {
       @for @ember/string
       @static
       @private
+      @deprecated
     */
     loc: {
       configurable: true,
