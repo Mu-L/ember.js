@@ -141,13 +141,6 @@ const TextSupport = Mixin.create({
   disabled: false,
   maxlength: null,
 
-  init() {
-    this._super(...arguments);
-    this.on('paste', this, this._elementValueDidChange);
-    this.on('cut', this, this._elementValueDidChange);
-    this.on('input', this, this._elementValueDidChange);
-  },
-
   /**
     Whether the `keyUp` event that triggers an `action` to be sent continues
     propagating to other views.
@@ -180,6 +173,18 @@ const TextSupport = Mixin.create({
   },
 
   change(event) {
+    this._elementValueDidChange(event);
+  },
+
+  paste(event) {
+    this._elementValueDidChange(event);
+  },
+
+  cut(event) {
+    this._elementValueDidChange(event);
+  },
+
+  input(event) {
     this._elementValueDidChange(event);
   },
 
@@ -328,7 +333,7 @@ function sendAction(eventName, view, event) {
     deprecate(message, false, {
       id: 'ember-component.send-action',
       until: '4.0.0',
-      url: 'https://emberjs.com/deprecations/v3.x#toc_ember-component-send-action',
+      url: 'https://deprecations.emberjs.com/v3.x#toc_ember-component-send-action',
       for: 'ember-source',
       since: {
         enabled: '3.4.0',
@@ -365,8 +370,11 @@ if (EMBER_MODERNIZED_BUILT_IN_COMPONENTS) {
         deprecate('Reopening Ember.TextSupport is deprecated.', false, {
           id: 'ember.built-in-components.reopen',
           for: 'ember-source',
-          since: {},
+          since: {
+            enabled: '3.27.0',
+          },
           until: '4.0.0',
+          url: 'https://deprecations.emberjs.com/v3.x#toc_ember-built-in-components-reopen',
         });
 
         TextSupport._wasReopened = true;

@@ -32,7 +32,7 @@ const TRANSFORMATIONS: { [key: string]: string } = {
 
 export default function transformHasBlockSyntax(env: EmberASTPluginEnvironment): ASTPlugin {
   let { builders: b } = env.syntax;
-  let { moduleName } = env.meta;
+  let moduleName = env.meta?.moduleName;
 
   function emitDeprecationMessage(node: AST.Node, name: string) {
     let sourceInformation = calculateLocationDisplay(moduleName, node.loc);
@@ -42,7 +42,7 @@ export default function transformHasBlockSyntax(env: EmberASTPluginEnvironment):
       {
         id: 'has-block-and-has-block-params',
         until: '4.0.0',
-        url: 'https://emberjs.com/deprecations/v3.x#toc_has-block-and-has-block-params',
+        url: 'https://deprecations.emberjs.com/v3.x#toc_has-block-and-has-block-params',
         for: 'ember-source',
         since: {
           enabled: '3.25.0',

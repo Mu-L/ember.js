@@ -118,10 +118,19 @@ const VM_DEPRECATION_OVERRIDES: (DeprecationOptions & {
   },
   {
     id: 'argument-less-helper-paren-less-invocation',
+    url: 'https://deprecations.emberjs.com/v3.x#toc_argument-less-helper-paren-less-invocation',
     until: '4.0.0',
     for: 'ember-source',
     since: {
       enabled: '3.27.0',
+    },
+  },
+  {
+    id: 'setting-on-hash',
+    until: '4.4.0',
+    for: 'ember-source',
+    since: {
+      enabled: '3.28.0',
     },
   },
 ];

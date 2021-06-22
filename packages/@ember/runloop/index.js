@@ -2,6 +2,7 @@ import { DEBUG } from '@glimmer/env';
 import { assert, deprecate } from '@ember/debug';
 import { onErrorTarget } from '@ember/-internals/error-handling';
 import { flushAsyncObservers } from '@ember/-internals/metal';
+import { onRunloopDotAccess } from '@ember/-internals/overrides';
 import Backburner from 'backburner';
 
 let currentRunLoop = null;
@@ -745,21 +746,25 @@ export let _deprecatedGlobalGetCurrentRunLoop;
 
 // eslint-disable-next-line no-undef
 if (DEBUG) {
+  let defaultHandler = (dotKey, importKey, module) => {
+    return `Using \`${dotKey}\` has been deprecated. Instead, import the value directly from ${module}:\n\n  import { ${importKey} } from '${module}';`;
+  };
+
+  let handler = onRunloopDotAccess || defaultHandler;
+
   let defineDeprecatedRunloopFunc = (key, func) => {
     Object.defineProperty(run, key, {
       get() {
-        deprecate(
-          `Using \`run.${key}\` has been deprecated. Instead, import the value directly from @ember/runloop:\n\n  import { ${key} } from '@ember/runloop';`,
-          false,
-          {
-            id: 'deprecated-run-loop-and-computed-dot-access',
-            until: '4.0.0',
-            for: 'ember-source',
-            since: {
-              enabled: '3.27.0',
-            },
-          }
-        );
+        let message = handler(`run.${key}`, key, '@ember/runloop');
+
+        deprecate(message, message === null, {
+          id: 'deprecated-run-loop-and-computed-dot-access',
+          until: '4.0.0',
+          for: 'ember-source',
+          since: {
+            enabled: '3.27.0',
+          },
+        });
 
         return func;
       },
@@ -767,18 +772,16 @@ if (DEBUG) {
   };
 
   _deprecatedGlobalGetCurrentRunLoop = () => {
-    deprecate(
-      `Using \`run.currentRunLoop\` has been deprecated. Instead, import the getCurrentRunLoop() directly from @ember/runloop:\n\n  import { getCurrentRunLoop } from '@ember/runloop';`,
-      false,
-      {
-        id: 'deprecated-run-loop-and-computed-dot-access',
-        until: '4.0.0',
-        for: 'ember-source',
-        since: {
-          enabled: '3.27.0',
-        },
-      }
-    );
+    let message = handler('run.currentRunLoop', 'getCurrentRunLoop', '@ember/runloop');
+
+    deprecate(message, message === null, {
+      id: 'deprecated-run-loop-and-computed-dot-access',
+      until: '4.0.0',
+      for: 'ember-source',
+      since: {
+        enabled: '3.27.0',
+      },
+    });
 
     return _getCurrentRunLoop();
   };
